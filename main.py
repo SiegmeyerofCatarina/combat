@@ -39,15 +39,18 @@ class Combat:
                     person.do_action(target)
                 else:
                     mortuary.add(person)
+                    print('{} died!'.format(person.name))
 
-            if mortuary:
-                print('{} died!'.format([person.name for person in mortuary]))
             persons_in_combat -= mortuary
-            num_survivors = len(self.persons)
-            if num_survivors <= 1:
-                if num_survivors == 1:
+
+            teams = set([person.team for person in persons_in_combat])
+            if len(teams) <= 1:
+                if len(teams) == 1:
                     winner = self.persons.pop()
-                    print('{} win! {} hp left'.format(winner.name, winner.health.hp))
+                    print('{} win!'.format(winner.team))
+                    print(*map('{} alive with {} hp'.format,
+                               [person.name for person in persons_in_combat],
+                               [person.health.hp for person in persons_in_combat]), sep=', ')
                 else:
                     winner = True
                     print('all died!')
