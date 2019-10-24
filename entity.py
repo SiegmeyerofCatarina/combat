@@ -76,8 +76,6 @@ class Entity:
         self.skills = skills
         self.effects = effects
 
-        print('created person ', name)
-
     def do_action(self, target):
         """
 
@@ -128,11 +126,12 @@ class Act:
         if self.max_range >= measure_distance(actor, target):
             target.health.update_hp(-self.damage_deal)
             if self.damage_deal > 0:
-                print('{} attack {} with {} on {} hp'.format(actor.name, target.name, self.name, self.damage_deal))
+                print('{} attack {} with {} on {} hp, {} hp lef'.format(
+                    actor.name, target.name, self.name, self.damage_deal, target.health.hp))
             else:
                 print('{} heal'.format(actor.name), end=' ')
                 print('yourself' if target is actor else '{}'.format(target.name), end=' ')
-                print('with {} on {} hp'.format(self.name, -self.damage_deal))
+                print('with {} on {} hp, and now have {} hp'.format(self.name, -self.damage_deal, target.health.hp))
 
 
 def measure_distance(actor: Entity, target: Entity):

@@ -1,5 +1,6 @@
 # main program call combat module with scene and entities
 from __future__ import annotations
+from collections import defaultdict
 import numpy as np
 
 from entity import generate_entity, generate_scene
@@ -7,7 +8,13 @@ from entity import generate_entity, generate_scene
 
 def main():
     scene = generate_scene()
-    persons = {*map(generate_entity, range(5))}
+    persons = {*map(generate_entity, range(10))}
+    print('generated {} persons'.format(len(persons)))
+    teams = defaultdict(int)
+    for person in persons:
+        teams[person.team] += 1
+
+    print(*map('{} in {} team'.format, teams.values(), teams.keys()), sep=', ')
     combat = Combat(scene, persons)
     combat.do()
     pass
