@@ -29,8 +29,7 @@ class Combat:
         :return: winner
         """
         winner = np.random.choice(self.persons)
-        print('{} win!'.format(winner.namer
-                               ))
+        print('{} win!'.format(winner.name))
         return winner
 
 
