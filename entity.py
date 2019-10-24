@@ -126,7 +126,7 @@ class Act:
         if self.max_range >= measure_distance(actor, target):
             target.health.update_hp(-self.damage_deal)
             if self.damage_deal > 0:
-                print('{} attack {} with {} on {} hp, {} hp lef'.format(
+                print('{} attack {} with {} on {} hp, {} hp left'.format(
                     actor.name, target.name, self.name, self.damage_deal, target.health.hp))
             else:
                 print('{} heal'.format(actor.name), end=' ')
