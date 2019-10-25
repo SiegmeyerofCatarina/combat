@@ -1,6 +1,8 @@
 from __future__ import annotations
-from typing import List, Tuple, Set, Dict
-import numpy as np
+from typing import Tuple, Set, Dict
+from numpy.random import choice
+
+from ai import Ai
 
 
 class Health:
@@ -49,6 +51,7 @@ class Entity:
             name: str,
             health: Health,
             team: str,
+            ai: Ai,
             parts: Dict[str, Part],
             actions: Set[Act],
             skills: Set[Skill],
@@ -71,25 +74,31 @@ class Entity:
         self.name = name
         self.health = health
         self.team = team
+        self.ai = ai
         self.parts = parts
         self.actions = actions
         self.skills = skills
         self.effects = effects
 
-    def do_action(self, target):
+    def do_action(self, targets):
         """
-
+        choose targets and actions
         :return:
         """
-        if target.team == self.team:
-            ally_actions = [action for action in self.actions if action.target == 'ally']
-            action = np.random.choice(ally_actions)
-        elif target.team == self.team:
-            enemy_actions = [action for action in self.actions if action.target == 'enemy']
-            action = np.random.choice(enemy_actions)
-        else:
-            action = np.random.choice(list(self.actions))
+        available_actions, available_targets = self.get_actions(targets)
+        action, target = self.ai.choose_action(self, available_actions, available_targets)
+
         action.do(self, target)
+
+    def get_actions(self, targets):
+        """
+        get list of available actions
+
+        :param targets:
+        :return:
+        """
+
+        return self.actions, targets
 
 
 class Act:
@@ -151,7 +160,8 @@ def generate_entity(id: int) -> Entity:
     :param id:
     :return: new entity
     """
-    team = np.random.choice(['pirates', 'british'])
+    default_ai = Ai()
+    team = choice(['pirates', 'british'])
     simple_attack = Act("pistol", 'enemy', 1, 6, set(), set())
     simple_heal = Act('drink potion', 'ally', 0, -2, set(), set())
 
@@ -161,6 +171,7 @@ def generate_entity(id: int) -> Entity:
         '{} soldier {}'.format(team, id),
         Health(10, 10, True),
         team,
+        default_ai,
         dict(),
         {simple_attack, simple_heal},
         set(),

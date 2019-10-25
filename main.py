@@ -41,8 +41,9 @@ class Combat:
         while not winner:
             for person in persons_in_combat:
                 if person.health.alive:
-                    target = np.random.choice(list(persons_in_combat))
-                    person.do_action(target)
+
+                    targets = persons_in_combat
+                    person.do_action(targets)
                 else:
                     mortuary.add(person)
                     print('{} died!'.format(person.name))
