@@ -5,29 +5,61 @@ from ai import Ai
 
 
 class Health:
-    def __init__(self, max_hp: int, hp: int, alive: bool) -> None:
+    __alive: bool
+    __health: int
+    __max_health: int
+    __death_callback: callable
+
+    def __init__(
+            self,
+            health: [int],
+            max_health: int = -1,
+            alive: bool = True,
+            death_callback: callable = None,
+    ) -> None:
         """
         class for tracking hp
-        :param max_hp:
-        :param hp:
+        :param max_health:
+        :param health:
         :param alive:
         """
-        self.max_hp = max_hp
-        self.hp = hp
-        self.alive = alive
+        self.__health = health
+        self.__max_health = max_health if max_health >= 0 else self.__health
+        self.__alive = alive
+        self.__death_callback = death_callback
 
-    def update_hp(self, value_hp: int) -> None:
-        """
-        make damage to self or heal if it possible
-        :param value_hp:
-        :return:
-        """
-        if self.alive:
-            self.hp += value_hp
-        if self.hp > self.max_hp:
-            self.hp = self.max_hp
-        elif self.hp <= 0:
-            self.alive = False
+    def get_alive(self):
+        return self.__alive
+
+    def set_alive(self, state):
+        self.__alive = state
+        if not self.alive and self.__death_callback:
+            self.__death_callback()
+
+    def get_health(self):
+        return self.__health
+
+    def set_health(self, value):
+        self.__health = min(max(value, 0), self.max_health)
+        self.check_alive()
+
+    def get_health_in_percentage(self):
+        return round(self.health * 100 / self.max_health, 2)
+
+    def get_max_health(self):
+        return self.__max_health
+
+    def set_max_health(self, value):
+        self.__max_health = value
+        self.health += self.max_health - value
+
+    def check_alive(self):
+        self.alive = self.health > 0
+
+    alive = property(get_alive, set_alive)
+    health = property(get_health, set_health)
+    max_health = property(get_max_health, set_max_health)
+    health_in_percentage = property(get_health_in_percentage)
 
 
 class Effect:
@@ -133,9 +165,9 @@ class Action:
         """
         if self.max_range >= measure_distance(actor, target):
             damage = self.damage_deal  # some modifier
-            target.health.update_hp(-damage)
+            target.health.health -= damage
             # TODO: logging
-            #log.event(actor, self, target, damage)
+            # log.event(actor, self, target, damage)
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
@@ -164,7 +196,7 @@ def generate_entity(id: int) -> Entity:
         id,
         (0, 0),
         f'{team} soldier {id}',
-        Health(10, 10, True),
+        Health(10),
         team,
         default_ai,
         dict(),

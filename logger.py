@@ -41,8 +41,8 @@ class Logger:
         :return:
         """
         if damage > 0:
-            print(f'{actor.name} attack {target.name} with {action.name} on {damage} hp, {target.health.hp} hp left')
+            print(f'{actor.name} attack {target.name} with {action.name} on {damage} hp, {target.health.health} hp left')
         else:
             print(f'{actor.name} heal')
             print(f'yourself' if target is actor else '{target.name}')
-            print(f'with {action.name} on {-damage} hp, and now have {target.health.hp} hp')
+            print(f'with {action.name} on {-damage} hp, and now have {target.health.health} hp')
