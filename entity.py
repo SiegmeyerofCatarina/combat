@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Tuple, Set, Dict
 from numpy.random import choice
 
@@ -6,7 +5,7 @@ from ai import Ai
 
 
 class Health:
-    def __init__(self, max_hp: int, hp: int, alive: bool):
+    def __init__(self, max_hp: int, hp: int, alive: bool) -> None:
         """
         class for tracking hp
         :param max_hp:
@@ -17,7 +16,7 @@ class Health:
         self.hp = hp
         self.alive = alive
 
-    def update_hp(self, value_hp: int):
+    def update_hp(self, value_hp: int) -> None:
         """
         make damage to self or heal if it possible
         :param value_hp:
@@ -49,14 +48,14 @@ class Entity:
             id: int,
             coordinates: Tuple[int, int],
             name: str,
-            health: Health,
+            health: 'Health',
             team: str,
-            ai: Ai,
-            parts: Dict[str, Part],
-            actions: Set[Act],
-            skills: Set[Skill],
-            effects: Set[Effect],
-    ):
+            ai: 'Ai',
+            parts: Dict[str, 'Part'],
+            actions: Set['Act'],
+            skills: Set['Skill'],
+            effects: Set['Effect'],
+    ) -> None:
         """
         construct any person or destroyable object
         :param id:
@@ -80,7 +79,7 @@ class Entity:
         self.skills = skills
         self.effects = effects
 
-    def do_action(self, targets):
+    def do_action(self, targets: Set['Entity']) -> None:
         """
         choose targets and actions
         :return:
@@ -90,7 +89,7 @@ class Entity:
 
         action.do(self, target)
 
-    def get_actions(self, targets):
+    def get_actions(self, targets: Set['Entity']) -> Tuple[Set['Act'], Set['Entity']]:
         """
         get list of available actions
 
@@ -109,7 +108,7 @@ class Act:
                  damage_deal: int,
                  pre_effects: Set[Effect],
                  post_effects: Set[Effect],
-                 ):
+                 ) -> None:
         """
         action
         :param name:
@@ -125,7 +124,7 @@ class Act:
         self.pre_effects = pre_effects
         self.post_effects = post_effects
 
-    def do(self, actor: Entity, target: Entity):
+    def do(self, actor: Entity, target: Entity) -> None:
         """
         do action in relation to the target
         :param actor:
@@ -133,17 +132,13 @@ class Act:
         :return:
         """
         if self.max_range >= measure_distance(actor, target):
-            target.health.update_hp(-self.damage_deal)
-            if self.damage_deal > 0:
-                print('{} attack {} with {} on {} hp, {} hp left'.format(
-                    actor.name, target.name, self.name, self.damage_deal, target.health.hp))
-            else:
-                print('{} heal'.format(actor.name), end=' ')
-                print('yourself' if target is actor else '{}'.format(target.name), end=' ')
-                print('with {} on {} hp, and now have {} hp'.format(self.name, -self.damage_deal, target.health.hp))
+            damage = self.damage_deal  # some modifier
+            target.health.update_hp(-damage)
+            # TO DO: logging
+            #log.event(actor, self, target, damage)
 
 
-def measure_distance(actor: Entity, target: Entity):
+def measure_distance(actor: Entity, target: Entity) -> int:
     """
     Measure distance between two entities
     :param actor:
