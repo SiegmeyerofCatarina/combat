@@ -27,7 +27,7 @@ class Logger:
     def end_combat(self, alive: Set['entity.Entity']) -> None:
         if alive:
             print(f'{list(alive)[0].team} win! Alive {len(alive)}:')
-            print(*map(lambda person: f'{person.name} ({person.health.hp} hp)', alive), sep=', ')
+            print(*map(lambda person: f'{person.name} ({person.health.health} hp)', alive), sep=', ')
         else:
             print('All dead!')
 
