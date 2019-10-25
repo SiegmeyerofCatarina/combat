@@ -15,7 +15,7 @@ class Logger:
         :param args:
         :return:
         """
-        print(f'generated {len(persons)} persons')
+        print(f'generated {len(persons)} persons:', end=' ')
         teams = defaultdict(int)
         for person in persons:
             teams[person.team] += 1
@@ -26,7 +26,7 @@ class Logger:
 
     def end_combat(self, alive: Set['entity.Entity']) -> None:
         if alive:
-            print(f'{list(alive)[0].team} win! Alive {len(alive)}:')
+            print(f'{list(alive)[0].team}\033[0m win! \U0001F451  \nAlive {len(alive)}:', end=' ')
             print(*map(lambda person: f'{person.name} (\033[91m{person.health.health} hp\033[0m)', alive), sep=', ')
         else:
             print('All dead!')
@@ -41,10 +41,10 @@ class Logger:
         :return:
         """
         if damage > 0:
-            print(f'{actor.name} attack \U0001F52B {target.name} with {action.name} on \033[91m{damage} hp\033[0m, \033[91m{target.health.health} hp\033[0m left')
+            print(f'{actor.name} attack {target.name} with {action.name} on \033[91m{damage} hp\033[0m, \033[91m{target.health.health} hp\033[0m left')
         else:
-            print(f'{actor.name} heal', end=' ')
-            print(f'yourself' if target is actor else '{target.name}', end=' ')
+            print(f'{actor.name}', end=' ')
+            print('healed' if target is actor else 'heal {target.name}', end=' ')
             print(f'with {action.name} on \033[91m{-damage} hp\033[0m, and now have \033[91m{target.health.health} hp\033[0m')
 
 log = Logger()
