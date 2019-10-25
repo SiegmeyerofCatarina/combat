@@ -43,6 +43,8 @@ class Logger:
         if damage > 0:
             print(f'{actor.name} attack {target.name} with {action.name} on {damage} hp, {target.health.health} hp left')
         else:
-            print(f'{actor.name} heal')
-            print(f'yourself' if target is actor else '{target.name}')
+            print(f'{actor.name} heal', end=' ')
+            print(f'yourself' if target is actor else '{target.name}', end=' ')
             print(f'with {action.name} on {-damage} hp, and now have {target.health.health} hp')
+
+log = Logger()

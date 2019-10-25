@@ -1,6 +1,6 @@
 from typing import Tuple, Set, Dict
 from numpy.random import choice
-
+import logger
 from ai import Ai
 
 
@@ -166,8 +166,7 @@ class Action:
         if self.max_range >= measure_distance(actor, target):
             damage = self.damage_deal  # some modifier
             target.health.health -= damage
-            # TODO: logging
-            # log.event(actor, self, target, damage)
+            logger.log.event(actor, self, target, damage)
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
@@ -195,7 +194,7 @@ def generate_entity(id: int) -> Entity:
     entity = Entity(
         id,
         (0, 0),
-        f'{team} soldier {id}',
+        f'{team}{id}',
         Health(10),
         team,
         default_ai,
