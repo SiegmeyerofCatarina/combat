@@ -1,3 +1,4 @@
+from typing import Set
 from numpy.random import choice
 
 
@@ -5,7 +6,7 @@ class Ai:
     def ___init___(self):
         pass
 
-    def choose_action(self, actor, actions, targets):
+    def choose_action(self, actor: 'Entity', actions: Set['Act'], targets: Set['Entity']):
         """
 
         :param actor:
