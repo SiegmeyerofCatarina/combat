@@ -1,26 +1,25 @@
 # main program call combat module with scene and entities
 from typing import Set
-from logger import Logger
+import logger
 from entity import generate_entity, generate_scene, Entity
 
 
 def main() -> None:
-    logger = Logger()
+
     scene = generate_scene()
     persons = {*map(generate_entity, range(5))}
-    combat = Combat(scene, persons, logger)
+    combat = Combat(scene, persons)
     combat.do()
 
 
 class Combat:
-    def __init__(self, scene: 'Scene', persons: Set['Entity'], logger: 'Logger') -> None:
+    def __init__(self, scene: 'Scene', persons: Set['Entity']) -> None:
         """
         Make war not love!
 
         :param scene:
         :param persons:
         """
-        self.log = logger
         self.scene = scene
         self.persons = persons
 
@@ -29,7 +28,7 @@ class Combat:
         lets fight!
         :return: winner
         """
-        self.log.strart_combat(self.scene, self.persons)
+        logger.log.strart_combat(self.scene, self.persons)
         mortuary = set()
         winner = False
 
@@ -40,12 +39,12 @@ class Combat:
                     person.do_action(targets)
                 else:
                     mortuary.add(person)
-                    self.log.death(person)
+                    logger.log.death(person)
 
             self.persons -= mortuary
             winner = self.search_winner()
         else:
-            self.log.end_combat(self.persons)
+            logger.log.end_combat(self.persons)
 
     def search_winner(self) -> bool:
         teams = set([person.team for person in self.persons])
