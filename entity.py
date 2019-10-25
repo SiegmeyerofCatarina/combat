@@ -187,14 +187,14 @@ def generate_entity(id: int) -> Entity:
     :return: new entity
     """
     default_ai = Ai()
-    team = choice(['pirates', 'british'])
-    simple_attack = Action('pistol', 'enemy', 1, 6, set(), set())
-    simple_heal = Action('drink potion', 'ally', 0, -2, set(), set())
+    team = choice(['\033[33mpirates', '\033[94mbritish'])
+    simple_attack = Action('\U0001F52B', 'enemy', 1, 6, set(), set())  # pistol
+    simple_heal = Action('\U0001F489', 'ally', 0, -2, set(), set())  # drink potion
 
     entity = Entity(
         id,
         (0, 0),
-        f'{team}{id}',
+        f'{team}{id}\033[0m',
         Health(10),
         team,
         default_ai,
