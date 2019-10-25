@@ -11,6 +11,7 @@ class Logger:
     def strart_combat(self, scene: 'Scene', persons: Set['entity.Entity']) -> None:
         """
 
+        :param persons:
         :param args:
         :return:
         """
@@ -26,7 +27,7 @@ class Logger:
     def end_combat(self, alive: Set['entity.Entity']) -> None:
         if alive:
             print(f'{list(alive)[0].team} win! Alive {len(alive)}:')
-            print(*map(lambda person: f'{person.name} ({person.health.hp} hp)', alive))
+            print(*map(lambda person: f'{person.name} ({person.health.hp} hp)', alive), sep=', ')
         else:
             print('All dead!')
 
