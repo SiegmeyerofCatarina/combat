@@ -163,7 +163,7 @@ def generate_entity(id: int) -> Entity:
     entity = Entity(
         id,
         (0, 0),
-        '{} soldier {}'.format(team, id),
+        f'{team} soldier {id}',
         Health(10, 10, True),
         team,
         default_ai,
