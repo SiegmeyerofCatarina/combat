@@ -1,6 +1,8 @@
 from typing import Set
 from collections import defaultdict
 
+from entity import Entity
+
 
 class Logger:
     def __init__(self):

@@ -1,7 +1,7 @@
 # main program call combat module with scene and entities
 from typing import Set
 from logger import Logger
-from entity import generate_entity, generate_scene
+from entity import generate_entity, generate_scene, Entity
 
 
 def main() -> None:
@@ -16,6 +16,7 @@ class Combat:
     def __init__(self, scene: 'Scene', persons: Set['Entity'], logger: 'Logger') -> None:
         """
         Make war not love!
+
         :param scene:
         :param persons:
         """

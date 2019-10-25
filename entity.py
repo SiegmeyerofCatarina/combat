@@ -52,7 +52,7 @@ class Entity:
             team: str,
             ai: 'Ai',
             parts: Dict[str, 'Part'],
-            actions: Set['Act'],
+            actions: Set['Action'],
             skills: Set['Skill'],
             effects: Set['Effect'],
     ) -> None:
@@ -89,7 +89,7 @@ class Entity:
 
         action.do(self, target)
 
-    def get_actions(self, targets: Set['Entity']) -> Tuple[Set['Act'], Set['Entity']]:
+    def get_actions(self, targets: Set['Entity']) -> Tuple[Set['Action'], Set['Entity']]:
         """
         get list of available actions
 
@@ -100,7 +100,7 @@ class Entity:
         return self.actions, targets
 
 
-class Act:
+class Action:
     def __init__(self,
                  name: str,
                  target: str,
@@ -134,7 +134,7 @@ class Act:
         if self.max_range >= measure_distance(actor, target):
             damage = self.damage_deal  # some modifier
             target.health.update_hp(-damage)
-            # TO DO: logging
+            # TODO: logging
             #log.event(actor, self, target, damage)
 
 
@@ -157,8 +157,8 @@ def generate_entity(id: int) -> Entity:
     """
     default_ai = Ai()
     team = choice(['pirates', 'british'])
-    simple_attack = Act("pistol", 'enemy', 1, 6, set(), set())
-    simple_heal = Act('drink potion', 'ally', 0, -2, set(), set())
+    simple_attack = Action('pistol', 'enemy', 1, 6, set(), set())
+    simple_heal = Action('drink potion', 'ally', 0, -2, set(), set())
 
     entity = Entity(
         id,
