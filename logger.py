@@ -1,14 +1,14 @@
 from typing import Set
 from collections import defaultdict
 
-from entity import Entity
+import entity
 
 
 class Logger:
     def __init__(self):
         self.log = list()
 
-    def strart_combat(self, scene: 'Scene', persons: Set['Entity']) -> None:
+    def strart_combat(self, scene: 'Scene', persons: Set['entity.Entity']) -> None:
         """
 
         :param args:
@@ -20,10 +20,10 @@ class Logger:
             teams[person.team] += 1
         print(*map('{} in {} team'.format, teams.values(), teams.keys()), sep=', ')
 
-    def death(self, person: 'Entity') -> None:
+    def death(self, person: 'entity.Entity') -> None:
         print('{} died!'.format(person.name))
 
-    def end_combat(self, alive: Set['Entity']) -> None:
+    def end_combat(self, alive: Set['entity.Entity']) -> None:
         if alive:
             print('{} win! Alive {}:'.format(list(alive)[0].team, len(alive)), end=' ')
             print(*map('{} ({} hp)'.format,
@@ -32,7 +32,7 @@ class Logger:
         else:
             print('All dead!')
 
-    def event(self, actor: 'Entity', action: 'Act', target: 'Entity', damage: int) -> None:
+    def event(self, actor: 'entity.Entity', action: 'entity.Action', target: 'entity.Entity', damage: int) -> None:
         """
 
         :param actor:

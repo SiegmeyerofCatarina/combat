@@ -1,12 +1,19 @@
 from typing import Set, Tuple
 from numpy.random import choice
 
+import entity
+
 
 class Ai:
     def ___init___(self) -> None:
         pass
 
-    def choose_action(self, actor: 'Entity', actions: Set['Act'], targets: Set['Entity']) -> Tuple['Act', 'Entity']:
+    def choose_action(
+            self,
+            actor: 'entity.Entity',
+            actions: Set['entity.Action'],
+            targets: Set['entity.Entity']
+    ) -> Tuple['entity.Action', 'entity.Entity']:
         """
 
         :param actor:
