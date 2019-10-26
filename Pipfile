@@ -9,6 +9,7 @@ verify_ssl = true
 numpy = "*"
 pylint = "*"
 sty = "*"
+emoji = "*"
 
 [requires]
 python_version = "3.8"

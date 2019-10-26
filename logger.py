@@ -1,6 +1,7 @@
 from typing import Set
 from collections import defaultdict
 from sty import fg
+from emoji import emojize
 
 import entity
 
@@ -40,12 +41,12 @@ class Logger:
         print(*map(lambda count, name: f'{count} in {name} team', teams.values(), teams.keys()), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
-        print(f'{person.name} died! ☠️')
+        print(f'{person.name} died! {emojize(":skull:")}')
 
     def end_combat(self, alive: Set['entity.Entity']) -> None:
         if alive:
-            print(f'{list(alive)[0].team} win! \U0001F451  \nAlive {len(alive)}:', end=' ')
-            print(*map(name_with_hp, alive), sep=', ')
+            print(f'{list(alive)[0].team} win! {emojize(":crown:")}')
+            print(f'Alive {len(alive)}:', *map(name_with_hp, alive), sep=' ')
         else:
             print('All dead!')
 

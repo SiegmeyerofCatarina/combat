@@ -1,5 +1,6 @@
 from numpy.random.mtrand import choice
 from sty import fg
+from emoji import emojize
 
 from Health import Health
 import ai
@@ -17,11 +18,11 @@ def generate_entity(id: int) -> Entity:
     melee_cooldown = Effect('melee c/d')
     perk_cooldown = Effect('perk c/d')
     team = choice(['pirates', 'british'])
-    fast_hit = Action('fast ⚔️', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
-    normal_attack = Action('normal ⚔️', 'enemy', 1, 5, cooldown=melee_cooldown, cooldown_time=2)
-    heavy_strike = Action('heavy 🗡️', 'enemy', 1, 7, cooldown=melee_cooldown, cooldown_time=3)
-    pistol_shot = Action('\U0001F52B', 'enemy', 1, 20, cooldown=perk_cooldown, cooldown_time=10)  # pistol
-    simple_heal = Action('\U0001F489', 'ally', 0, -10, cooldown=perk_cooldown, cooldown_time=5)  # drink potion
+    fast_hit = Action(f'fast {emojize(":crossed_swords:")}', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
+    normal_attack = Action(f'normal {emojize(":crossed_swords:")}', 'enemy', 1, 5, cooldown=melee_cooldown, cooldown_time=2)
+    heavy_strike = Action(f'heavy {emojize(":dagger:")}', 'enemy', 1, 7, cooldown=melee_cooldown, cooldown_time=3)
+    pistol_shot = Action(emojize(":dagger:"), 'enemy', 1, 20, cooldown=perk_cooldown, cooldown_time=10)  # pistol
+    simple_heal = Action(emojize(":syringe:"), 'ally', 0, -10, cooldown=perk_cooldown, cooldown_time=5)  # drink potion
 
     entity = Entity(
         id,
