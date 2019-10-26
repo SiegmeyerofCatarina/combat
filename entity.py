@@ -26,6 +26,28 @@ class Skill:
     pass
 
 
+class Team:
+    def __init__(self, name: str, members: Set['Entity'] = set()) -> None:
+        self.name = name
+        self.members = members
+
+    def add(self, member: 'Entity') -> None:
+        self.members.add(member)
+
+    def remove(self, member: 'Entity') -> None:
+        self.members.remove(member)
+
+    def update(self, members: Set['Entity']) -> None:
+        self.members.update(members)
+
+    def get_alive(self) -> Set['Entity']:
+        return {member for member in self.members if member.health.alive}
+
+    alive_members = property(get_alive)
+
+
+
+
 class Entity:
     def __init__(
             self,
@@ -33,7 +55,6 @@ class Entity:
             coordinates: Tuple[int, int],
             name: str,
             health: 'Health',
-            team: str,
             ai: 'Ai',
             parts: Dict[str, 'Part'],
             actions: Set['Action'],
@@ -56,35 +77,33 @@ class Entity:
         self.position = coordinates
         self.name = name
         self.health = health
-        self.team = team
         self.ai = ai
         self.parts = parts
         self.actions = actions
         self.skills = skills
         self.effects = effects
 
-    def do_action(self, targets: Set['Entity']) -> None:
+    def do_action(self, ally: Set['Entity'], enemy: Set['Entity']) -> None:
         """
         choose targets and actions
         :return:
         """
-        available_actions, available_targets = self.get_actions(targets)
-        action, target = self.ai.choose_action(self, available_actions, available_targets)
+        available_actions, available_ally_targets, available_enemy_targets = self.get_actions(ally, enemy)
+        action, target = self.ai.choose_action(self, available_actions, available_ally_targets, available_enemy_targets)
         if not action:
             action = pass_action
         action.do(self, target)
 
-    def get_actions(self, targets: Set['Entity']) -> Tuple[Set['Action'], Set['Entity']]:
+    def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[Set['Action'], Set['Entity']]:
         """
         get list of available actions
 
         :param targets:
         :return:
         """
-        available_actions = [action for action in self.actions if not action.cooldown.timer]
-        available_targets = targets
+        available_actions = {action for action in self.actions if not action.cooldown.timer}
 
-        return available_actions, available_targets
+        return available_actions, ally, enemy
 
 
 class Action:

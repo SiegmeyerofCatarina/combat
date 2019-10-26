@@ -8,8 +8,8 @@ verify_ssl = true
 [packages]
 numpy = "*"
 pylint = "*"
-sty = "*"
 emoji = "*"
+sty = "*"
 
 [requires]
 python_version = "3.8"

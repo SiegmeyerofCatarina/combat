@@ -1,20 +1,23 @@
 # main program call combat module with scene and entities
-from typing import Set
+from typing import Set, List
 import logger
 from entity import Entity
-from generator import generate_entity, generate_scene
+from generator import generate_team, generate_entity, generate_scene
 
 
 def main() -> None:
 
     scene = generate_scene()
-    persons = {*map(generate_entity, range(5))}
-    combat = Combat(scene, persons)
+    teams = {*map(generate_team, range(2))}
+    for team in teams:
+        persons = {*map(generate_entity, range(2))}
+        team.update(persons)
+    combat = Combat(scene, teams)
     combat.do()
 
 
 class Combat:
-    def __init__(self, scene: 'Scene', persons: Set['Entity']) -> None:
+    def __init__(self, scene: 'Scene', teams: Set['Team']) -> None:
         """
         Make war not love!
 
@@ -22,34 +25,34 @@ class Combat:
         :param persons:
         """
         self.scene = scene
-        self.persons = persons
+        self.teams = teams
 
     def do(self) -> None:
         """
         lets fight!
         :return: winner
         """
-        logger.log.strart_combat(self.scene, self.persons)
-        mortuary = set()
+        logger.log.strart_combat(self.scene, self.teams)
         winner = False
 
         while not winner:  # main loop
-            for person in self.persons:
-                if person.health.alive:
-                    targets = self.persons
-                    person.do_action(targets)
-                else:
-                    mortuary.add(person)
-                    logger.log.death(person)
+            for team in self.teams:
+                enemies_teams = self.teams - {team}
+                enemies_alive = set.union(*[team.alive_members for team in enemies_teams])
+                ally_alive = team.alive_members
+                for person in ally_alive:
+                    person.do_action(ally_alive, enemies_alive)
 
-            self.persons -= mortuary
+                    # logger.log.death(person)
+
             winner = self.search_winner()
-        else:
-            logger.log.end_combat(self.persons)
+
 
     def search_winner(self) -> bool:
-        teams = set([person.team for person in self.persons])
+
+        teams = [team for team in self.teams if team.alive_members]
         if len(teams) <= 1:
+            logger.log.end_combat(teams)
             return True
         else:
             return False

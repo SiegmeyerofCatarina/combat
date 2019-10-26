@@ -1,5 +1,4 @@
-from typing import Set
-from collections import defaultdict
+from typing import Set, List
 from sty import fg
 from emoji import emojize
 
@@ -27,26 +26,25 @@ class Logger:
     def __init__(self):
         self.log = list()
 
-    def strart_combat(self, scene: 'Scene', persons: Set['entity.Entity']) -> None:
+    def strart_combat(self, scene: 'Scene', teams: Set['entity.Team']) -> None:
         """
 
         :param persons:
         :param args:
         :return:
         """
-        print(f'generated {len(persons)} persons:', end=' ')
-        teams = defaultdict(int)
-        for person in persons:
-            teams[person.team] += 1
-        print(*map(lambda count, name: f'{count} in {name} team', teams.values(), teams.keys()), sep=', ')
+        print(f'generated {sum([len(team.alive_members) for team in teams])} persons:', end=' ')
+        print(*map(lambda team: f'{len(team.alive_members)} in {team.name} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
         print(f'{person.name} died! {emojize(":skull:")}')
 
-    def end_combat(self, alive: Set['entity.Entity']) -> None:
-        if alive:
-            print(f'{list(alive)[0].team} win! {emojize(":crown:")}')
-            print(f'Alive {len(alive)}:', *map(name_with_hp, alive), sep=' ')
+    def end_combat(self, teams: List['entity.Team']) -> None:
+        if teams:
+            winner_team = teams[0]
+            print(f'{winner_team.name} win! {emojize(":crown:")}')
+            print(f'Alive {len(winner_team.alive_members)}:', end=' ')
+            print(*map(name_with_hp, [person for person in winner_team.alive_members]), sep=' ')
         else:
             print('All dead!')
 

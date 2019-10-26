@@ -11,7 +11,8 @@ class Ai:
             self,
             actor: 'entity.Entity',
             actions: Set['entity.Action'],
-            targets: Set['entity.Entity']
+            enemy_targets: Set['entity.Entity'],
+            ally_targets: Set['entity.Entity'],
     ) -> Tuple['entity.Action', 'entity.Entity']:
         """
 
@@ -24,16 +25,7 @@ class Ai:
         target = actor
 
         if actions:
-            ally_targets = set()
-            enemy_targets = set()
-
-            for target in targets:
-                if target.team == actor.team:
-                    ally_targets.add(target)
-                else:
-                    enemy_targets.add(target)
-
-            action = choice(actions)
+            action = choice(list(actions))
             if action.target == 'enemy' and enemy_targets:
                 target = choice(list(enemy_targets))
             if action.target == 'ally' and ally_targets:
