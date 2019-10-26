@@ -33,7 +33,6 @@ def generate_entity(id: int) -> Entity:
         default_ai,
         dict(),
         {
-            # pass_action,
             fast_hit,
             normal_attack,
             heavy_strike,
