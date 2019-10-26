@@ -1,7 +1,8 @@
 # main program call combat module with scene and entities
 from typing import Set
 import logger
-from entity import generate_entity, generate_scene, Entity
+from entity import Entity
+from generator import generate_entity, generate_scene
 
 
 def main() -> None:

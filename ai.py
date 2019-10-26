@@ -1,6 +1,5 @@
 from typing import Set, Tuple
 from numpy.random import choice
-
 import entity
 
 
@@ -21,15 +20,23 @@ class Ai:
         :param targets:
         :return:
         """
+        action = None
+        target = actor
 
-        target = choice(list(targets))
-        if target.team == actor.team:
-            ally_actions = [action for action in actions if action.target == 'ally']
-            action = choice(ally_actions)
-        elif target.team == actor.team:
-            enemy_actions = [action for action in actions if action.target == 'enemy']
-            action = choice(enemy_actions)
-        else:
-            action = choice(list(actions))
+        if actions:
+            ally_targets = set()
+            enemy_targets = set()
+
+            for target in targets:
+                if target.team == actor.team:
+                    ally_targets.add(target)
+                else:
+                    enemy_targets.add(target)
+
+            action = choice(actions)
+            if action.target == 'enemy' and enemy_targets:
+                target = choice(list(enemy_targets))
+            if action.target == 'ally' and ally_targets:
+                target = choice(list(ally_targets))
 
         return action, target

@@ -1,5 +1,4 @@
 from typing import Tuple, Set, Dict
-from numpy.random import choice
 import logger
 
 from Health import Health
@@ -7,7 +6,16 @@ from ai import Ai
 
 
 class Effect:
-    pass
+    def __init__(self, name: str, timer: int = 0) -> None:
+        self.name = name
+        self.timer = timer
+
+    def set_timer(self, timer: int):
+        self.timer = timer
+
+    def update(self):
+        if self.timer:
+            self.timer -= 1
 
 
 class Part:
@@ -62,7 +70,8 @@ class Entity:
         """
         available_actions, available_targets = self.get_actions(targets)
         action, target = self.ai.choose_action(self, available_actions, available_targets)
-
+        if not action:
+            action = pass_action
         action.do(self, target)
 
     def get_actions(self, targets: Set['Entity']) -> Tuple[Set['Action'], Set['Entity']]:
@@ -72,8 +81,10 @@ class Entity:
         :param targets:
         :return:
         """
+        available_actions = [action for action in self.actions if not action.cooldown.timer]
+        available_targets = targets
 
-        return self.actions, targets
+        return available_actions, available_targets
 
 
 class Action:
@@ -82,8 +93,11 @@ class Action:
                  target: str,
                  max_range: int,
                  damage_deal: int,
-                 pre_effects: Set[Effect],
-                 post_effects: Set[Effect],
+                 cooldown: Effect,
+                 cooldown_time: int = 0,
+                 pre_effects: Set[Effect] = set(),
+                 post_effects: Set[Effect] = set(),
+
                  ) -> None:
         """
         action
@@ -99,18 +113,43 @@ class Action:
         self.damage_deal = damage_deal
         self.pre_effects = pre_effects
         self.post_effects = post_effects
+        self.cooldown = cooldown
+        self.cooldown_time = cooldown_time
 
     def do(self, actor: Entity, target: Entity) -> None:
         """
         do action in relation to the target
+
         :param actor:
         :param target:
         :return:
         """
-        if self.max_range >= measure_distance(actor, target):
-            damage = self.damage_deal  # some modifier
-            target.health.health -= damage
-            logger.log.event(actor, self, target, damage)
+        expired_events = set()
+        for effect in actor.effects:
+            effect.update()
+            if not effect.timer:
+                expired_events.add(effect)
+
+        actor.effects -= expired_events
+
+        for effect in self.pre_effects:
+            actor.effects.add(effect)
+
+        if not self.cooldown.timer:
+
+            if self.max_range >= measure_distance(actor, target):
+                damage = self.damage_deal  # some modifier
+                target.health.health -= damage
+                self.cooldown.timer = self.cooldown_time
+
+
+                logger.log.event(actor, self, target, damage)
+
+                actor.effects.add(self.cooldown)
+
+                for effect in self.post_effects:
+                    actor.effects.add(effect)
+
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
@@ -124,35 +163,5 @@ def measure_distance(actor: Entity, target: Entity) -> int:
     return dst
 
 
-def generate_entity(id: int) -> Entity:
-    """
-    Generate entity
-    :param id:
-    :return: new entity
-    """
-    default_ai = Ai()
-    team = choice(['\033[33mpirates', '\033[94mbritish'])
-    simple_attack = Action('\U0001F52B', 'enemy', 1, 6, set(), set())  # pistol
-    simple_heal = Action('\U0001F489', 'ally', 0, -2, set(), set())  # drink potion
-
-    entity = Entity(
-        id,
-        (0, 0),
-        f'{team}{id}\033[0m',
-        Health(10),
-        team,
-        default_ai,
-        dict(),
-        {simple_attack, simple_heal},
-        set(),
-        set(),
-    )
-    return entity
-
-
-def generate_scene():
-    """
-    Generate scene
-    :return: new scene
-    """
-    return 2
+no_cooldown = Effect('')
+pass_action = Action('pass', 'ally', 1, 0, no_cooldown)
