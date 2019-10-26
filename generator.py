@@ -1,4 +1,5 @@
 from numpy.random.mtrand import choice
+from sty import fg
 
 from Health import Health
 import ai
@@ -15,8 +16,8 @@ def generate_entity(id: int) -> Entity:
 
     melee_cooldown = Effect('melee c/d')
     perk_cooldown = Effect('perk c/d')
-    team = choice(['\033[33mpirates', '\033[94mbritish'])
-    fast_hit = Action('fast ⚔', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
+    team = choice(['pirates', 'british'])
+    fast_hit = Action('fast ⚔️', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
     normal_attack = Action('normal ⚔️', 'enemy', 1, 5, cooldown=melee_cooldown, cooldown_time=2)
     heavy_strike = Action('heavy 🗡️', 'enemy', 1, 7, cooldown=melee_cooldown, cooldown_time=3)
     pistol_shot = Action('\U0001F52B', 'enemy', 1, 20, cooldown=perk_cooldown, cooldown_time=10)  # pistol
@@ -25,7 +26,7 @@ def generate_entity(id: int) -> Entity:
     entity = Entity(
         id,
         (0, 0),
-        f'{team}{id}\033[0m',
+        f'{fg.yellow}{team}{id}{fg.rs}',
         Health(25),
         team,
         default_ai,
