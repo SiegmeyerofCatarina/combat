@@ -14,10 +14,10 @@ class Health:
         """
         Class for create health
 
-        :param health:
-        :param max_health:
-        :param alive:
-        :param death_callback:
+        :param health: Current health
+        :param max_health: Max health
+        :param alive: Alive state
+        :param death_callback: Function called at dead
         """
         self.__health = health
         self.__max_health = max_health if max_health >= 0 else self.__health
