@@ -3,10 +3,12 @@ from collections import defaultdict
 
 import entity
 
+
 def name_with_hp_and_cooldowns(person: 'Entiy') -> str:
     name_with_hp_str = name_with_hp(person)
     cooldown_str = f'{[(action.name, action.cooldown.timer) for action in person.actions]}'
     return name_with_hp_str + cooldown_str
+
 
 def name_with_hp(person: 'Entiy') -> str:
     """
@@ -17,6 +19,7 @@ def name_with_hp(person: 'Entiy') -> str:
     """
     name_with_hp_str = f'{person.name}(\033[91m{person.health.health} hp\033[0m)'
     return name_with_hp_str
+
 
 class Logger:
     def __init__(self):
@@ -63,4 +66,5 @@ class Logger:
             print('healed' if target is actor else 'heal {target.name}', end=' ')
             print(f'with {name_with_hp(actor)} on \033[91m{-damage} hp\033[0m')
 
-log = Logger()
+
+logger = Logger()

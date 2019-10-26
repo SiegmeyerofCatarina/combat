@@ -1,5 +1,5 @@
 from typing import Tuple, Set, Dict
-import logger
+from logger import logger
 
 from Health import Health
 from ai import Ai
@@ -142,14 +142,12 @@ class Action:
                 target.health.health -= damage
                 self.cooldown.timer = self.cooldown_time
 
-
-                logger.log.event(actor, self, target, damage)
+                logger.event(actor, self, target, damage)
 
                 actor.effects.add(self.cooldown)
 
                 for effect in self.post_effects:
                     actor.effects.add(effect)
-
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
