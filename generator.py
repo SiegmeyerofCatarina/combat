@@ -16,8 +16,6 @@ def generate_entity(id: int) -> Entity:
     melee_cooldown = Effect('melee c/d')
     perk_cooldown = Effect('perk c/d')
     team = choice(['\033[33mpirates', '\033[94mbritish'])
-    # no_cooldown = Effect('')
-    # pass_action = Action('pass', 'ally', 1, 0, no_cooldown)
     fast_hit = Action('fast ⚔', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
     normal_attack = Action('normal ⚔️', 'enemy', 1, 5, cooldown=melee_cooldown, cooldown_time=2)
     heavy_strike = Action('heavy 🗡️', 'enemy', 1, 7, cooldown=melee_cooldown, cooldown_time=3)

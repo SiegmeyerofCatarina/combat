@@ -125,6 +125,7 @@ class Action:
         :return:
         """
         expired_events = set()
+
         for effect in actor.effects:
             effect.update()
             if not effect.timer:
@@ -132,23 +133,21 @@ class Action:
 
         actor.effects -= expired_events
 
-        for effect in self.pre_effects:
-            actor.effects.add(effect)
-
         if not self.cooldown.timer:
-
             if self.max_range >= measure_distance(actor, target):
+
+                for effect in self.pre_effects:
+                    actor.effects.add(effect)
+
                 damage = self.damage_deal  # some modifier
                 target.health.health -= damage
                 self.cooldown.timer = self.cooldown_time
-
-
-                logger.log.event(actor, self, target, damage)
-
                 actor.effects.add(self.cooldown)
 
                 for effect in self.post_effects:
                     actor.effects.add(effect)
+
+                logger.log.event(actor, self, target, damage)
 
 
 
