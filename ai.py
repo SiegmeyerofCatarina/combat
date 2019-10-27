@@ -11,8 +11,8 @@ class Ai:
             self,
             actor: 'entity.Entity',
             actions: Set['entity.Action'],
-            enemy_targets: Set['entity.Entity'],
             ally_targets: Set['entity.Entity'],
+            enemy_targets: Set['entity.Entity'],
     ) -> Tuple['entity.Action', 'entity.Entity']:
         """
 

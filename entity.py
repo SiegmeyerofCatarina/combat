@@ -99,6 +99,8 @@ class Entity:
 
     def take_damage(self, damage_value):
         self.health.health -= damage_value
+        if not self.health.alive:
+            logger.log.death(self)
 
 
 class Action:

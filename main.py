@@ -9,7 +9,7 @@ import random
 def main() -> None:
 
     scene = generate_scene()
-    teams = {*map(generate_team, range(2))}
+    teams = {*map(generate_team, range(4))}
 
     for team in teams:
         count_members = random.randint(1, 5)
@@ -39,14 +39,18 @@ class Combat:
         winner = False
 
         while not winner:  # main loop
+            alive_members = dict()
             for team in self.teams:
-                enemies_teams = self.teams - {team}
-                enemies_alive = set.union(*[team.alive_members for team in enemies_teams])
                 ally_alive = team.alive_members
+                alive_members[team] = ally_alive
+
+            for team in self.teams:
+                ally_alive = set(alive_members[team])
+                enemies_teams = self.teams - {team}
+                enemies_alive = set.union(*[alive_members[team] for team in enemies_teams])
+
                 for person in ally_alive:
                     person.do_action(ally_alive, enemies_alive)
-
-                    # logger.log.death(person)
 
             winner = self.search_winner()
 

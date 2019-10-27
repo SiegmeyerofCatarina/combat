@@ -37,12 +37,12 @@ class Logger:
         print(*map(lambda team: f'{len(team.alive_members)} in {team.color}{team.name}{fg.rs} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
-        print(f'{person.name} died! {emojize(":skull:")}')
+        print(f'{name_with_hp(person)} died! {emojize(":skull:")}')
 
     def end_combat(self, teams: List['entity.Team']) -> None:
         if teams:
             winner_team = teams[0]
-            print(f'{winner_team.name} win! {emojize(":crown:")}')
+            print(f'{winner_team.color}{winner_team.name}{fg.rs} win! {emojize(":crown:")}')
             print(f'Alive {len(winner_team.alive_members)}:', end=' ')
             print(*map(name_with_hp, [person for person in winner_team.alive_members]), sep=' ')
         else:
@@ -62,8 +62,8 @@ class Logger:
         elif damage == 0:
             print(f'{name_with_hp_and_cooldowns(actor)} {action.name}')
         else:
-            print(f'{actor.name}', end=' ')
+            print(f'{name_with_hp(actor)}', end=' ')
             print('healed' if target is actor else 'heal {target.name}', end=' ')
-            print(f'with {name_with_hp(actor)} on {fg.red}{-damage} hp{fg.rs}')
+            print(f'with {action.name} on {fg.red}{-damage} hp{fg.rs}')
 
 log = Logger()
