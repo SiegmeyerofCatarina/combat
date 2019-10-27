@@ -24,7 +24,9 @@ def name_with_hp(person: 'Entiy') -> str:
 
 class Logger:
     def __init__(self):
-        self.log = list()
+        self.turn = 1
+        self.event_log = list()
+        self.death_log = list()
 
     def strart_combat(self, scene: 'Scene', teams: Set['entity.Team']) -> None:
         """
@@ -37,16 +39,16 @@ class Logger:
         print(*map(lambda team: f'{len(team.alive_members)} in {team.color}{team.name}{fg.rs} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
-        print(f'{name_with_hp(person)} died! {emojize(":skull:")}')
+        self.death_log.append(f'{name_with_hp(person)}')
 
     def end_combat(self, teams: List['entity.Team']) -> None:
         if teams:
             winner_team = teams[0]
-            print(f'{winner_team.color}{winner_team.name}{fg.rs} win! {emojize(":crown:")}')
+            print(f'{emojize(":crown:")} {winner_team.color}{winner_team.name}{fg.rs} win!')
             print(f'Alive {len(winner_team.alive_members)}:', end=' ')
             print(*map(name_with_hp, [person for person in winner_team.alive_members]), sep=' ')
         else:
-            print('All dead!')
+            print(f'{emojize(":skull:")} All dead!')
 
     def event(self, actor: 'entity.Entity', action: 'entity.Action', target: 'entity.Entity', damage: int) -> None:
         """
@@ -58,12 +60,29 @@ class Logger:
         :return:
         """
         if damage > 0:
-            print(f'{name_with_hp(actor)} attack {name_with_hp(target)} with {action.name} on {fg.red}{damage} hp{fg.rs}')
+            log_str = f'{emojize(":crossed_swords:")} {name_with_hp(actor)} attack {name_with_hp(target)} with {action.name} on {fg.red}{damage} hp{fg.rs}'
         elif damage == 0:
-            print(f'{name_with_hp_and_cooldowns(actor)} {action.name}')
+            log_str = f'{name_with_hp_and_cooldowns(actor)} {action.name}'
         else:
-            print(f'{name_with_hp(actor)}', end=' ')
-            print('healed' if target is actor else 'heal {target.name}', end=' ')
-            print(f'with {action.name} on {fg.red}{-damage} hp{fg.rs}')
+            log_str = f'{emojize(":syringe:")} {name_with_hp(actor)}' + ' healed' if target is actor else ' heal {target.name}' + f'with {action.name} on {fg.red}{-damage} hp{fg.rs}'
+
+        self.event_log.append(log_str)
+
+    def turn_log(self):
+        print(f'turn {self.turn}:')
+        for event in self.event_log:
+            print(event)
+
+        if self.death_log:
+            print(f'{emojize(":skull:")} Died:', end=' ')
+            print(*[death for death in self.death_log], sep=', ', end='.\n')
+
+        self.update()
+
+    def update(self):
+        self.turn += 1
+        self.death_log = list()
+        self.event_log = list()
+
 
 log = Logger()

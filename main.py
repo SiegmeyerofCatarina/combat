@@ -52,6 +52,7 @@ class Combat:
                 for person in ally_alive:
                     person.do_action(ally_alive, enemies_alive)
 
+            logger.log.turn_log()
             winner = self.search_winner()
 
 

@@ -20,11 +20,11 @@ def generate_entity(id: int, team: 'Team' = None) -> Entity:
 
     melee_cooldown = Effect('melee c/d')
     perk_cooldown = Effect('perk c/d')
-    fast_attack = Action(f'fast {emojize(":crossed_swords:")}', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
-    normal_attack = Action(f'normal {emojize(":crossed_swords:")}', 'enemy', 1, 5, cooldown=melee_cooldown, cooldown_time=2)
-    heavy_attack = Action(f'heavy {emojize(":dagger:")}', 'enemy', 1, 7, cooldown=melee_cooldown, cooldown_time=3)
+    fast_attack = Action(f'fast hit', 'enemy', 1, 2, cooldown=melee_cooldown, cooldown_time=1)
+    normal_attack = Action(f'normal attack', 'enemy', 1, 5, cooldown=melee_cooldown, cooldown_time=2)
+    heavy_attack = Action(f'heavy strike', 'enemy', 1, 7, cooldown=melee_cooldown, cooldown_time=3)
     pistol_shot = Action(emojize(":dagger:"), 'enemy', 1, 20, cooldown=perk_cooldown, cooldown_time=10)  # pistol
-    simple_heal = Action(emojize(":syringe:"), 'ally', 0, -10, cooldown=perk_cooldown, cooldown_time=5)  # drink potion
+    simple_heal = Action('hp potion', 'ally', 0, -10, cooldown=perk_cooldown, cooldown_time=5)  # drink potion
 
     entity = Entity(
         id,
