@@ -105,6 +105,9 @@ class Entity:
 
         return available_actions, ally, enemy
 
+    def take_damage(self, damage_value):
+        self.health.health -= damage_value
+
 
 class Action:
     def __init__(self,
@@ -159,7 +162,7 @@ class Action:
                     actor.effects.add(effect)
 
                 damage = self.damage_deal  # some modifier
-                target.health.health -= damage
+                target.take_damage(damage)
                 self.cooldown.timer = self.cooldown_time
                 actor.effects.add(self.cooldown)
 
