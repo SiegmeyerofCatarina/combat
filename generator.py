@@ -8,9 +8,10 @@ from entity import Entity, Action, Team
 from Effect import Effect
 
 
-def generate_entity(id: int) -> Entity:
+def generate_entity(id: int, team: 'Team' = None) -> Entity:
     """
     Generate entity
+    :param team:
     :param id:
     :return: new entity
     """
@@ -28,7 +29,7 @@ def generate_entity(id: int) -> Entity:
     entity = Entity(
         id,
         (0, 0),
-        f'{fg.yellow}{name}{id}{fg.rs}',
+        f'{name}{id}',
         Health(25),
         default_ai,
         dict(),
@@ -39,15 +40,25 @@ def generate_entity(id: int) -> Entity:
             pistol_shot,
             simple_heal,
         },
-        set(),
-        set(),
+        team=team,
     )
     return entity
 
 
 def generate_team(id: int) -> 'Team':
-    team_names_list = ['\033[33mpirates\033[0m', '\033[94mbritish\033[0m']
-    new_team = Team(team_names_list[id])
+    team_names_list = ['Alba', 'Bertha', 'Gambia', 'Dalton', 'Ephesian']
+
+    team_colors_list = [
+        # fg.black,
+        # fg.red,
+        # fg.green,
+        fg.yellow,
+        fg.blue,
+        fg.magenta,
+        fg.cyan,
+        fg.white,
+    ]
+    new_team = Team(team_names_list[id], team_colors_list[id])
     return new_team
 
 

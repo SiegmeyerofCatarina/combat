@@ -2,22 +2,25 @@
 from typing import Set, List
 import logger
 from entity import Entity
+import time
 from generator import generate_team, generate_entity, generate_scene
-
+import random
 
 def main() -> None:
 
     scene = generate_scene()
     teams = {*map(generate_team, range(2))}
+
     for team in teams:
-        persons = {*map(generate_entity, range(2))}
+        count_members = random.randint(1, 5)
+        persons = [generate_entity(id, team) for id in range(count_members)]
         team.update(persons)
     combat = Combat(scene, teams)
     combat.do()
 
 
 class Combat:
-    def __init__(self, scene: 'Scene', teams: Set['Team']) -> None:
+    def __init__(self, scene: 'Scene', teams: Set['Entity.Team']) -> None:
         """
         Make war not love!
 

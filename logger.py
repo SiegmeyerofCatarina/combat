@@ -18,7 +18,7 @@ def name_with_hp(person: 'Entiy') -> str:
     :param person:
     :return:
     """
-    name_with_hp_str = f'{person.name}({fg.red}{person.health.health} hp{fg.rs})'
+    name_with_hp_str = f'{person.team.color}{person.name}{fg.rs}({fg.red}{person.health.health} hp{fg.rs})'
     return name_with_hp_str
 
 
@@ -34,7 +34,7 @@ class Logger:
         :return:
         """
         print(f'generated {sum([len(team.alive_members) for team in teams])} persons:', end=' ')
-        print(*map(lambda team: f'{len(team.alive_members)} in {team.name} team', teams), sep=', ')
+        print(*map(lambda team: f'{len(team.alive_members)} in {team.color}{team.name}{fg.rs} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
         print(f'{person.name} died! {emojize(":skull:")}')

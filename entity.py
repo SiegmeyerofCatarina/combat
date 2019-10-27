@@ -1,4 +1,7 @@
 from typing import Tuple, Set, Dict
+
+from sty import fg
+
 import logger
 from Effect import Effect
 
@@ -15,9 +18,10 @@ class Skill:
 
 
 class Team:
-    def __init__(self, name: str, members: Set['Entity'] = set()) -> None:
+    def __init__(self, name: str, color: 'str', members: Set['Entity'] = None) -> None:
         self.name = name
-        self.members = members
+        self.color = color
+        self.members = members or set()
 
     def add(self, member: 'Entity') -> None:
         self.members.add(member)
@@ -44,8 +48,9 @@ class Entity:
             ai: 'Ai',
             parts: Dict[str, 'Part'],
             actions: Set['Action'],
-            skills: Set['Skill'],
-            effects: Set['Effect'],
+            skills: Set['Skill'] = set(),
+            effects: Set['Effect'] = set(),
+            team: 'Team' = None,
     ) -> None:
         """
         construct any person or destroyable object
@@ -68,6 +73,7 @@ class Entity:
         self.actions = actions
         self.skills = skills
         self.effects = effects
+        self.team = team
 
     def do_action(self, ally: Set['Entity'], enemy: Set['Entity']) -> None:
         """
@@ -80,7 +86,7 @@ class Entity:
             action = pass_action
         action.do(self, target)
 
-    def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[Set['Action'], Set['Entity']]:
+    def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[Set['Action'], Set['Entity'], Set['Entity']]:
         """
         get list of available actions
 
@@ -156,6 +162,8 @@ class Action:
                     actor.effects.add(effect)
 
                 logger.log.event(actor, self, target, damage)
+        else:
+            raise Exception('called action in cooldown')
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
