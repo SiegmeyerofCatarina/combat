@@ -46,8 +46,6 @@ class Team:
     alive_members = property(get_alive)
 
 
-
-
 class Entity:
     def __init__(
             self,
@@ -110,17 +108,17 @@ class Entity:
 
 
 class Action:
-    def __init__(self,
-                 name: str,
-                 target: str,
-                 max_range: int,
-                 damage_deal: int,
-                 cooldown: Effect,
-                 cooldown_time: int = 0,
-                 pre_effects: Set[Effect] = set(),
-                 post_effects: Set[Effect] = set(),
-
-                 ) -> None:
+    def __init__(
+            self,
+            name: str,
+            target: str,
+            max_range: int,
+            damage_deal: int,
+            cooldown: Effect,
+            cooldown_time: int = 0,
+            pre_effects: Set[Effect] = set(),
+            post_effects: Set[Effect] = set(),
+    ) -> None:
         """
         action
         :param name:
@@ -170,7 +168,6 @@ class Action:
                     actor.effects.add(effect)
 
                 logger.log.event(actor, self, target, damage)
-
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
