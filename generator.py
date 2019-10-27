@@ -4,7 +4,8 @@ from emoji import emojize
 
 from Health import Health
 import ai
-from entity import Entity, Effect, Action, Team
+from entity import Entity, Action, Team
+from Effect import Effect
 
 
 def generate_entity(id: int) -> Entity:
