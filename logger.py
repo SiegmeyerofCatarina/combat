@@ -8,7 +8,7 @@ class Logger:
     def __init__(self):
         self.turn = 1
         self.event_log = list()
-        self.death_log = list()
+        self.death_log = set()
 
     def strart_combat(self, scene: 'Scene', teams: Set['entity.Team']) -> None:
         """
@@ -17,11 +17,11 @@ class Logger:
         :param args:
         :return:
         """
-        print(f'generated {sum([len(team.alive_members) for team in teams])} persons:', end=' ')
+        print(f'generated {sum((len(team.alive_members) for team in teams))} persons:', end=' ')
         print(*map(lambda team: f'{len(team.alive_members)} in {team.name_color} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
-        self.death_log.append(f'{person.name_color}')
+        self.death_log.add(f'{person.name_color}')
 
     def end_combat(self, teams: List['entity.Team']) -> None:
         if teams:
@@ -29,7 +29,7 @@ class Logger:
             print(f'{emojize(":crown:")} {winner_team.name_color} win!')
             print(f'Alive {len(winner_team.alive_members)}:', end=' ')
             print(*map(lambda person: f'{person.name_color} ({person.health.hp_percent})',
-                       [person for person in winner_team.alive_members]), sep=' ')
+                       {person for person in winner_team.alive_members}), sep=' ')
         else:
             print(f'{emojize(":skull:")} All dead!')
 
@@ -61,13 +61,13 @@ class Logger:
 
         if self.death_log:
             print(f'{emojize(":skull:")} Died:', end=' ')
-            print(*[death for death in self.death_log], sep=', ', end='.\n')
+            print(*{death for death in self.death_log}, sep=', ', end='.\n')
 
         self.update()
 
     def update(self):
         self.turn += 1
-        self.death_log = list()
+        self.death_log = set()
         self.event_log = list()
 
 
