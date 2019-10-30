@@ -24,7 +24,7 @@ class Ai:
         action = None
         target = actor
 
-        if len(actions):
+        if actions:
             action = choice(list(actions))
             if action.target == 'enemy' and enemy_targets:
                 target = choice(list(enemy_targets))
