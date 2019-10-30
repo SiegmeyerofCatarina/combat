@@ -85,11 +85,14 @@ class Entity:
         choose targets and actions
         :return:
         """
+        self.effects.update()
         available_actions, available_ally_targets, available_enemy_targets = self.get_actions(ally, enemy)
         action, target = self.ai.choose_action(self, available_actions, available_ally_targets, available_enemy_targets)
         if not action:
             action = pass_action
+            target = self
         action.do(self, target)
+
 
     def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[
         Set['Action'], Set['Entity'], Set['Entity']]:
@@ -103,7 +106,7 @@ class Entity:
         for action in self.actions:
             if action.cool_down.name not in [effect.name for effect in self.effects.effects]:
                 available_actions.add(action)
-
+        # print(f'{self.name_color} has {[action.name for action in available_actions]}')
         return available_actions, ally, enemy
 
     def take_damage(self, damage_value):
@@ -115,7 +118,7 @@ class Entity:
         return f'{self.team.color}{self.name}{fg.rs}'
 
     def __get_person_cooldowns(self) -> str:
-        cooldown_str = f'{[(action.name, action.cool_down.cool_down.time) for action in self.actions]}'
+        cooldown_str = f'{[(effect.name, effect.cool_down.time) for effect in self.effects.effects]}'
         return cooldown_str
 
     name_color = property(__get_name_with_color)
@@ -157,21 +160,20 @@ class Action:
         :param target:
         :return:
         """
-        actor.effects.update()
 
         # TODO проверить расчет кулдауна. Возможно не правильная последовательность сброса кулдауна
-        if self.max_range >= measure_distance(actor, target):
-            # for effect in self.pre_effects:
+        #     if self.max_range >= measure_distance(actor, target):
+               # for effect in self.pre_effects:
             #     actor.effects.add(effect)
 
-            damage = self.damage_deal  # some modifier
-            target.take_damage(damage)
-            actor.effects.add(self.cool_down)
+        damage = self.damage_deal  # some modifier
+        target.take_damage(damage)
+        actor.effects.add(self.cool_down)
 
             # for effect in self.post_effects:
             #     actor.effects.add(effect)
+        logger.log.event(actor, self, target, damage)
 
-            logger.log.event(actor, self, target, damage)
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
