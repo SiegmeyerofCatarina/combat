@@ -9,6 +9,7 @@ import random
 MAX_TEAMS = 3
 MAX_MEMBERS_IN_TEAM = 2
 
+
 def main() -> None:
 
     scene = generate_scene()
@@ -59,9 +60,7 @@ class Combat:
             logger.log.turn_log()
             winner = self.search_winner()
 
-
     def search_winner(self) -> bool:
-
         teams = [team for team in self.teams if team.alive_members]
         if len(teams) <= 1:
             logger.log.end_combat(teams)

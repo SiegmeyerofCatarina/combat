@@ -1,6 +1,5 @@
 import names
 from sty import fg
-from emoji import emojize
 
 from Health import Health
 import ai

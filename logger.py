@@ -4,6 +4,7 @@ from emoji import emojize
 
 import entity
 
+
 class Logger:
     def __init__(self):
         self.turn = 1

@@ -4,7 +4,6 @@ from sty import fg
 
 import logger
 from Effect import Effect, Effects
-from CoolDown import CoolDown
 
 from Health import Health
 from ai import Ai
@@ -93,7 +92,6 @@ class Entity:
             target = self
         action.do(self, target)
 
-
     def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[
         Set['Action'], Set['Entity'], Set['Entity']]:
         """
@@ -173,7 +171,6 @@ class Action:
             # for effect in self.post_effects:
             #     actor.effects.add(effect)
         logger.log.event(actor, self, target, damage)
-
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
