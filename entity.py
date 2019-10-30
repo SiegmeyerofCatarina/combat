@@ -3,7 +3,8 @@ from typing import Tuple, Set, Dict
 from sty import fg
 
 import logger
-from Effect import Effect
+from Effect import Effect, Effects
+from CoolDown import CoolDown
 
 from Health import Health
 from ai import Ai
@@ -38,7 +39,6 @@ class Team:
     def __get_name_in_color(self) -> str:
         return f'{self.color}{self.name}{fg.rs}'
 
-
     alive_members = property(__get_alive)
     name_color = property(__get_name_in_color)
 
@@ -53,8 +53,8 @@ class Entity:
             ai: 'Ai',
             parts: Dict[str, 'Part'],
             actions: Set['Action'],
-            skills: Set['Skill'] = set(),
-            effects: Set['Effect'] = set(),
+            skills: Set['Skill'] = None,
+            effects: Effects = None,
             team: 'Team' = None,
     ) -> None:
         """
@@ -76,8 +76,8 @@ class Entity:
         self.ai = ai
         self.parts = parts
         self.actions = actions
-        self.skills = skills
-        self.effects = effects
+        self.skills = skills or set()
+        self.effects = effects or Effects()
         self.team = team
 
     def do_action(self, ally: Set['Entity'], enemy: Set['Entity']) -> None:
@@ -91,14 +91,18 @@ class Entity:
             action = pass_action
         action.do(self, target)
 
-    def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[Set['Action'], Set['Entity'], Set['Entity']]:
+    def get_actions(self, ally: Set['Entity'], enemy: Set['Entity']) -> Tuple[
+        Set['Action'], Set['Entity'], Set['Entity']]:
         """
         get list of available actions
 
         :param targets:
         :return:
         """
-        available_actions = {action for action in self.actions if not action.cooldown.timer}
+        available_actions = set()
+        for action in self.actions:
+            if action.cool_down.name not in [effect.name for effect in self.effects.effects]:
+                available_actions.add(action)
 
         return available_actions, ally, enemy
 
@@ -108,10 +112,10 @@ class Entity:
             logger.log.death(self)
 
     def __get_name_with_color(self):
-        return  f'{self.team.color}{self.name}{fg.rs}'
+        return f'{self.team.color}{self.name}{fg.rs}'
 
     def __get_person_cooldowns(self) -> str:
-        cooldown_str = f'{[(action.name, action.cooldown.timer) for action in self.actions]}'
+        cooldown_str = f'{[(action.name, action.cool_down.cool_down.time) for action in self.actions]}'
         return cooldown_str
 
     name_color = property(__get_name_with_color)
@@ -125,10 +129,9 @@ class Action:
             target: str,
             max_range: int,
             damage_deal: int,
-            cooldown: Effect,
-            cooldown_time: int = 0,
-            pre_effects: Set[Effect] = set(),
-            post_effects: Set[Effect] = set(),
+            cool_down: Effect,
+            pre_effects: Effects = None,
+            post_effects: Effects = None,
     ) -> None:
         """
         action
@@ -142,10 +145,9 @@ class Action:
         self.name = name
         self.max_range = max_range
         self.damage_deal = damage_deal
-        self.pre_effects = pre_effects
-        self.post_effects = post_effects
-        self.cooldown = cooldown
-        self.cooldown_time = cooldown_time
+        self.cool_down = cool_down
+        self.pre_effects = pre_effects or Effects()
+        self.post_effects = post_effects or Effects()
 
     def do(self, actor: Entity, target: Entity) -> None:
         """
@@ -155,32 +157,21 @@ class Action:
         :param target:
         :return:
         """
-        expired_events = set()
+        actor.effects.update()
 
-        for effect in actor.effects:
-            effect.update()
-            if not effect.timer:
-                expired_events.add(effect)
+        # TODO проверить расчет кулдауна. Возможно не правильная последовательность сброса кулдауна
+        if self.max_range >= measure_distance(actor, target):
+            # for effect in self.pre_effects:
+            #     actor.effects.add(effect)
 
-        actor.effects -= expired_events
+            damage = self.damage_deal  # some modifier
+            target.take_damage(damage)
+            actor.effects.add(self.cool_down)
 
-        if not self.cooldown.timer:
-            if self.max_range >= measure_distance(actor, target):
+            # for effect in self.post_effects:
+            #     actor.effects.add(effect)
 
-                for effect in self.pre_effects:
-                    actor.effects.add(effect)
-
-                damage = self.damage_deal  # some modifier
-                target.take_damage(damage)
-                self.cooldown.timer = self.cooldown_time
-                actor.effects.add(self.cooldown)
-
-                for effect in self.post_effects:
-                    actor.effects.add(effect)
-
-                logger.log.event(actor, self, target, damage)
-        else:
-            raise Exception('called action in cooldown')
+            logger.log.event(actor, self, target, damage)
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
@@ -194,5 +185,4 @@ def measure_distance(actor: Entity, target: Entity) -> int:
     return dst
 
 
-no_cooldown = Effect('')
-pass_action = Action('pass', 'ally', 1, 0, no_cooldown)
+pass_action = Action('pass', 'ally', 1, 0, Effect('pass', 0))
