@@ -6,14 +6,17 @@ import time
 from generator import generate_team, generate_entity, generate_scene
 import random
 
+MAX_TEAMS = 3
+MAX_MEMBERS_IN_TEAM = 2
+
 def main() -> None:
 
     scene = generate_scene()
-    count_teams = random.randint(2, 5)
+    count_teams = random.randint(2, MAX_TEAMS)
     teams = {*map(generate_team, range(count_teams))}
 
     for team in teams:
-        count_members = random.randint(1, 5)
+        count_members = random.randint(1, MAX_MEMBERS_IN_TEAM)
         persons = [generate_entity(id, team) for id in range(count_members)]
         team.update(persons)
     combat = Combat(scene, teams)
