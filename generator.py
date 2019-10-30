@@ -51,12 +51,12 @@ def generate_team(id: int) -> 'Team':
     team_colors_list = [
         # fg.black,
         # fg.red,
-        # fg.green,
         fg.yellow,
         fg.blue,
         fg.magenta,
         fg.cyan,
         fg.white,
+        fg.green,
     ]
     new_team = Team(team_names_list[id], team_colors_list[id])
     return new_team
