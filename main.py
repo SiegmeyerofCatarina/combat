@@ -9,7 +9,7 @@ import random
 def main() -> None:
 
     scene = generate_scene()
-    count_teams = random.randint(1, 5)
+    count_teams = random.randint(2, 5)
     teams = {*map(generate_team, range(count_teams))}
 
     for team in teams:

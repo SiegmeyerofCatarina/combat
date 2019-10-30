@@ -102,6 +102,16 @@ class Entity:
         if not self.health.alive:
             logger.log.death(self)
 
+    def __get_name_with_color(self):
+        return  f'{self.team.color}{self.name}{fg.rs}'
+
+    def __get_person_cooldowns(self) -> str:
+        cooldown_str = f'{[(action.name, action.cooldown.timer) for action in self.actions]}'
+        return cooldown_str
+
+    name_color = property(__get_name_with_color)
+    cooldowns = property(__get_person_cooldowns)
+
 
 class Action:
     def __init__(

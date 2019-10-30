@@ -4,24 +4,6 @@ from emoji import emojize
 
 import entity
 
-
-def name_with_hp_and_cooldowns(person: 'Entiy') -> str:
-    name_with_hp_str = name_with_hp(person)
-    cooldown_str = f'{[(action.name, action.cooldown.timer) for action in person.actions]}'
-    return name_with_hp_str + cooldown_str
-
-
-def name_with_hp(person: 'Entiy') -> str:
-    """
-    make colorful output
-
-    :param person:
-    :return:
-    """
-    name_with_hp_str = f'{person.team.color}{person.name}{fg.rs}({fg.red}{person.health.health} hp{fg.rs})'
-    return name_with_hp_str
-
-
 class Logger:
     def __init__(self):
         self.turn = 1
@@ -39,14 +21,14 @@ class Logger:
         print(*map(lambda team: f'{len(team.alive_members)} in {team.color}{team.name}{fg.rs} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
-        self.death_log.append(f'{name_with_hp(person)}')
+        self.death_log.append(f'{person.name_color}')
 
     def end_combat(self, teams: List['entity.Team']) -> None:
         if teams:
             winner_team = teams[0]
             print(f'{emojize(":crown:")} {winner_team.color}{winner_team.name}{fg.rs} win!')
             print(f'Alive {len(winner_team.alive_members)}:', end=' ')
-            print(*map(name_with_hp, [person for person in winner_team.alive_members]), sep=' ')
+            print(*map(lambda person: f'{person.name_color} ({person.health.hp_percent})', [person for person in winner_team.alive_members]), sep=' ')
         else:
             print(f'{emojize(":skull:")} All dead!')
 
@@ -60,11 +42,14 @@ class Logger:
         :return:
         """
         if damage > 0:
-            log_str = f'{emojize(":crossed_swords:")} {name_with_hp(actor)} attack {name_with_hp(target)} with {action.name} on {fg.red}{damage} hp{fg.rs}'
+            log_str = f'{emojize(":crossed_swords:")} {actor.name_color} {actor.health.hp_bar} ' \
+                      f'attack {target.name_color} {target.health.hp_bar} with {action.name} on {fg.red}{damage} hp{fg.rs}'
         elif damage == 0:
-            log_str = f'{name_with_hp_and_cooldowns(actor)} {action.name}'
+            log_str = f'{actor.name_color}{actor.health.hp_bar}{actor.cooldowns} {action.name}'
         else:
-            log_str = f'{emojize(":syringe:")} {name_with_hp(actor)}' + ' healed' if target is actor else ' heal {target.name}' + f'with {action.name} on {fg.red}{-damage} hp{fg.rs}'
+            log_str = f'{emojize(":syringe:")} {actor.name_color} {actor.health.hp_bar} '
+            log_str += 'healed' if target is actor else f' heal {target.name_color} {target.health.hp_bar} '
+            log_str += f' with {action.name} on {fg.cyan}{-damage} hp{fg.rs}'
 
         self.event_log.append(log_str)
 
