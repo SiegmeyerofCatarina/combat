@@ -160,17 +160,18 @@ class Action:
         """
 
         # TODO проверить расчет кулдауна. Возможно не правильная последовательность сброса кулдауна
-        #     if self.max_range >= measure_distance(actor, target):
+
+        if self.max_range >= measure_distance(actor, target):
                # for effect in self.pre_effects:
             #     actor.effects.add(effect)
 
-        damage = self.damage_deal  # some modifier
-        target.take_damage(damage)
-        actor.effects.add(self.cool_down)
+            damage = self.damage_deal  # some modifier
+            target.take_damage(damage)
+            actor.effects.add(self.cool_down)
 
             # for effect in self.post_effects:
             #     actor.effects.add(effect)
-        logger.log.event(actor, self, target, damage)
+            logger.log.event(actor, self, target, damage)
 
 
 def measure_distance(actor: Entity, target: Entity) -> int:
