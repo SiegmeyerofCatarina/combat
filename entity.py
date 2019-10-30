@@ -32,10 +32,15 @@ class Team:
     def update(self, members: Set['Entity']) -> None:
         self.members.update(members)
 
-    def get_alive(self) -> Set['Entity']:
+    def __get_alive(self) -> Set['Entity']:
         return {member for member in self.members if member.health.alive}
 
-    alive_members = property(get_alive)
+    def __get_name_in_color(self) -> str:
+        return f'{self.color}{self.name}{fg.rs}'
+
+
+    alive_members = property(__get_alive)
+    name_color = property(__get_name_in_color)
 
 
 class Entity:

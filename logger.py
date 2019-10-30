@@ -18,7 +18,7 @@ class Logger:
         :return:
         """
         print(f'generated {sum([len(team.alive_members) for team in teams])} persons:', end=' ')
-        print(*map(lambda team: f'{len(team.alive_members)} in {team.color}{team.name}{fg.rs} team', teams), sep=', ')
+        print(*map(lambda team: f'{len(team.alive_members)} in {team.name_color} team', teams), sep=', ')
 
     def death(self, person: 'entity.Entity') -> None:
         self.death_log.append(f'{person.name_color}')
@@ -26,9 +26,10 @@ class Logger:
     def end_combat(self, teams: List['entity.Team']) -> None:
         if teams:
             winner_team = teams[0]
-            print(f'{emojize(":crown:")} {winner_team.color}{winner_team.name}{fg.rs} win!')
+            print(f'{emojize(":crown:")} {winner_team.name_color} win!')
             print(f'Alive {len(winner_team.alive_members)}:', end=' ')
-            print(*map(lambda person: f'{person.name_color} ({person.health.hp_percent})', [person for person in winner_team.alive_members]), sep=' ')
+            print(*map(lambda person: f'{person.name_color} ({person.health.hp_percent})',
+                       [person for person in winner_team.alive_members]), sep=' ')
         else:
             print(f'{emojize(":skull:")} All dead!')
 
