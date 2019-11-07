@@ -80,7 +80,6 @@ class Health:
         hp = f'{self.__color}{self.__health} hp{fg.rs}'
         return hp
 
-
     alive = property(__get_alive, __set_alive)
     health = property(__get_health, __set_health)
     max_health = property(__get_max_health, __set_max_health)
