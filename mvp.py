@@ -40,7 +40,7 @@ class Boat:
             elif choice == 1:
                 print("вы пытаетесь убежать")
                 self.choice_run()
-        print("boat health:", self.health.hp_bar)
+        print(f'boat health: {self.health.hp_bar} {self.health.health_in_percentage}%')
 
     health = property(__get_health)
 
