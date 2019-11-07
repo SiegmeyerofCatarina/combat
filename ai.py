@@ -10,10 +10,10 @@ class Ai:
     def choose_action(
             self,
             actor: 'entity.Entity',
-            actions: Set['entity.Action'],
+            actions: Set['entity.Ability'],
             ally_targets: Set['entity.Entity'],
             enemy_targets: Set['entity.Entity'],
-    ) -> Tuple['entity.Action', 'entity.Entity']:
+    ) -> Tuple['entity.Ability', 'entity.Entity']:
         """
 
         :param actor:

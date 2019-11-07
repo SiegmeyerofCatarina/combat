@@ -1,10 +1,12 @@
 import names
 from sty import fg
 
-from Health import Health
+from health import Health
 import ai
-from entity import Entity, Action, Team
-from Effect import Effect
+from entity import Entity
+from teams import Team
+from actions import Ability
+from effects import Effect
 
 
 def get_melee_cooldown(time):
@@ -14,8 +16,11 @@ def get_melee_cooldown(time):
 def get_perk_cooldown(time):
     return Effect('perk c/d', time)
 
+def damage_effect(damage):
+    return Effect('damage', 0)
 
-def generate_entity(id: int, team: 'Team' = None) -> Entity:
+
+def generate_entity(id: int, team: 'Team' = None, hp=100) -> Entity:
     """
     Generate entity
     :param team:
@@ -25,17 +30,17 @@ def generate_entity(id: int, team: 'Team' = None) -> Entity:
     default_ai = ai.Ai()
     name = names.get_full_name()
 
-    fast_attack = Action(f'fast hit', 'enemy', 1, 2, get_melee_cooldown(1))
-    normal_attack = Action(f'normal attack', 'enemy', 1, 5, get_melee_cooldown(2))
-    heavy_attack = Action(f'heavy strike', 'enemy', 1, 7, get_melee_cooldown(3))
-    pistol_shot = Action('pistol shot', 'enemy', 1, 20, get_perk_cooldown(10))  # pistol
-    simple_heal = Action('hp potion', 'ally', 0, -10, get_perk_cooldown(5))  # drink potion
+    fast_attack = Ability(f'fast hit', 'enemy', 1, 2, get_melee_cooldown(1))
+    normal_attack = Ability(f'normal attack', 'enemy', 1, 5, get_melee_cooldown(2))
+    heavy_attack = Ability(f'heavy strike', 'enemy', 1, 7, get_melee_cooldown(3))
+    pistol_shot = Ability('pistol shot', 'enemy', 1, 20, get_perk_cooldown(10))  # pistol
+    simple_heal = Ability('hp potion', 'ally', 0, -10, get_perk_cooldown(5))  # drink potion
 
     entity = Entity(
         id,
         (0, 0),
         f'{name}',
-        Health(25),
+        Health(hp),
         default_ai,
         dict(),
         {

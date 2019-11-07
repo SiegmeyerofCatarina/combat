@@ -23,6 +23,7 @@ class Logger:
 
     def death(self, person: 'entity.Entity') -> None:
         self.death_log.add(f'{person.name_color}')
+        # print(f'{person.name_color} dead')
 
     def end_combat(self, teams: List['entity.Team']) -> None:
         if teams:
@@ -34,7 +35,7 @@ class Logger:
         else:
             print(f'{emojize(":skull:")} All dead!')
 
-    def event(self, actor: 'entity.Entity', action: 'entity.Action', target: 'entity.Entity', damage: int) -> None:
+    def event(self, actor: 'entity.Entity', action: 'entity.Ability', target: 'entity.Entity', damage: int) -> None:
         """
 
         :param actor:
