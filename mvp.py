@@ -21,8 +21,10 @@ class Boat:
     def choice_run(self):
         result = random.randint(0, 1)
         if result == 0:
+            print("не удалось убежать")
             self.combat()
-        print("вы убежали")
+        else:
+            print("вы убежали")
 
     def tick(self):
         x = random.randint(0, 1)
@@ -33,8 +35,10 @@ class Boat:
             print("на вас напали пираты вступить в бой(0) или удрать(1)?")
             choice = int(input())
             if choice == 0:
+                print("вы вступаете в бой")
                 self.choice_battle()
-            if choice == 1:
+            elif choice == 1:
+                print("вы пытаетесь убежать")
                 self.choice_run()
         print("boat health:", self.health.hp_bar)
 
