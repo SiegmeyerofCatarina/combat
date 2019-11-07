@@ -3,7 +3,8 @@ from sty import fg
 
 from Health import Health
 import ai
-from entity import Entity, Action, Team
+from entity import Entity, Team
+from Action import Action
 from Effect import Effect
 
 
