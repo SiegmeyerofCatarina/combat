@@ -10,6 +10,18 @@ def combat(try_escape=False):
     return False
 
 
+def choice_battle():
+    return combat()
+
+
+def choice_run():
+    result = random.randint(0, 1)
+    if result == 0:
+        return combat(True)
+    print("вы убежали")
+    return True
+
+
 def get_event():
     x = random.randint(0, 1)
     if x == 0:
@@ -19,16 +31,9 @@ def get_event():
     print("на вас напали пираты вступить в бой(0) или удрать(1)?")
     choice = int(input())
     if choice == 0:
-        result = combat(True)
-        return result
+        return choice_battle()
     if choice == 1:
-        y = random.randint(0, 1)
-        if y == 0:
-            print("вы умерли")
-            return False
-        else:
-            print("вы убежали")
-            return True
+        return choice_run()
 
 
 if __name__ == '__main__':
