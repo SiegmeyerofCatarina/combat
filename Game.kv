@@ -1,0 +1,35 @@
+<GameLayout>:
+    padding: 10
+
+    label_hp: label_hp
+    label_event: label_event
+    button1: button1
+    button2: button2
+
+
+    Label:
+        text: 'Map here'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Label:
+            id: label_hp
+            text: 'HP Boat'
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            Label:
+                id: label_event
+                text: 'current Text'
+
+            Button:
+                id: button1
+                text: 'action one'
+                on_release: root.action_one()
+
+            Button:
+                id: button2
+                text: 'action two'
+                on_release: root.action_two()
